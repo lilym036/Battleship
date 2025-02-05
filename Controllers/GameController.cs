@@ -5,7 +5,7 @@ using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading;
 
-namespace Battleship_Group10
+namespace Battleship_Group10.Controllers
 {
     public class GameController
     {

@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Battleship_Group10.Models
 {
-    internal class Coordinates
+    internal class Coordinate
     {
         public int X { get; }
         public int Y { get; }
 
-        public Coordinates(int x, int y)
+        public Coordinate(int x, int y)
         {  X = x; 
            Y = y; 
         }
