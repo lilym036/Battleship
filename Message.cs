@@ -1,8 +1,16 @@
 ﻿using System;
 
-public class Class1
+
+namespace Battleship_Group10
 {
-	public Class1()
-	{
-	}
+
+    public class Message
+    {
+        public Message()
+        {
+
+        }
+    }
+
 }
+
