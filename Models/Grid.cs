@@ -16,7 +16,7 @@ namespace Battleship_Group10.Models
         const int COLUMNS = 4; //MVP
 
 
-        // Constructor; height(rows) and width(cols) are set to 4 x 4 by default(MVP) ir 10x10(Stretch)
+        // Constructor; height(rows) and width(cols) are set to 4 x 4 by default(MVP) or 10x10(Stretch)
         public Grid()
         {
             this.height = ROWS;
