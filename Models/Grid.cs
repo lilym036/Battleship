@@ -8,12 +8,14 @@ namespace Battleship_Group10.Models
 {
     internal class Grid
     {
-        private int height { get; set; } //rows
-        private int width { get; set; } //columns
-        private Position[,] positions { get; set; }
+        public int height { get; private set; } //rows
+        public int width { get; private set; } //columns
+        public Position[,] positions { get; private set; }
+        public List<Ship> ships { get; private set; }
 
-        const int ROWS = 4; //MVP
-        const int COLUMNS = 4; //MVP
+        const int ROWS = 4; //MVP; 10 for Stretch
+        const int COLUMNS = 4; //MVP; 10 for Stretch
+        public Random random;
 
 
         // Constructor; height(rows) and width(cols) are set to 4 x 4 by default(MVP) or 10x10(Stretch)
@@ -32,6 +34,14 @@ namespace Battleship_Group10.Models
             }
         }
 
+
+        public void randomizeShipPlacement()
+        {
+            random = new Random();
+            int x = random.Next(0, ROWS);
+            int y = random.Next(0, COLUMNS);
+            positions[x, y].status = Position.Status.Ship;
+        }
 
     }
 }
