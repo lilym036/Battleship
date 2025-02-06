@@ -10,6 +10,10 @@ namespace Battleship_Group10.Controllers
         private Player computerPlayer;
         private Grid gameGrid;
 
+        public GameController() 
+        { 
+        }
+        
         public void Initialize()
         {
             Message.AnnounceWelcomeMessage();
