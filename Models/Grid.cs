@@ -27,7 +27,7 @@ namespace Battleship_Group10.Models
             {
                 for (int j = 0; j < COLUMNS; j++)
                 {
-                    positions[i, j] = new Position(new Coordinate(i,j), Position.Status.Water);
+                    positions[i, j] = new Position(new Coordinate(i,j), Status.Water);
                 }
             }
         }
