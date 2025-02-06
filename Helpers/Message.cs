@@ -11,6 +11,11 @@ namespace Battleship_Group10.Helpers
         {
         }
 
+        public static void AnnounceWelcomeMessage()
+        {
+            Console.WriteLine("Welcome to Battleship!");
+        }
+
         public static void AnnounceHits(Coordinate coordinate)
         {
             Console.WriteLine($"Your missile has HIT a ship at row {coordinate.X}, column {coordinate.Y}");

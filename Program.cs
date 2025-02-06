@@ -1,3 +1,6 @@
+﻿using System;
+using Battleship_Group10.Controllers;
+
 namespace Battleship_Group10
 {
     class Program
