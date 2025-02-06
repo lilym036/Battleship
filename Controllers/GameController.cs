@@ -11,20 +11,17 @@ namespace Battleship_Group10.Controllers
         private Grid gameGrid;
 
         public GameController() 
-        { 
+        {
+            this.gameGrid = new Grid();
+
+            // MVP: Human player has no grid, computer player has a grid
+            this.humanPlayer = new Player(Player.PlayerType.Human);
+            this.computerPlayer = new Player(Player.PlayerType.Computer, gameGrid);
         }
         
         public void Initialize()
         {
             Message.AnnounceWelcomeMessage();
-            SetupGameGrid();
-            CreatePlayers();
-        }
-
-
-        private void SetupGameGrid()
-        {
-            gameGrid = new Grid();
         }
 
 
@@ -40,7 +37,7 @@ namespace Battleship_Group10.Controllers
         private void CheckPosition(Coordinate target)
         {
             // Get the position of the targeted coordinate
-            Position position = ComputerGrid.positions[target.X, target.Y];
+            Position position = gameGrid.positions[target.X, target.Y];
 
             // Check the status of the position
             switch (position.status)
@@ -68,11 +65,11 @@ namespace Battleship_Group10.Controllers
 
         private Coordinate UserGuessInput()
         {
-            Coordinate coordinate = null;
+            Coordinate? coordinate = null;
             while (coordinate == null)
             {
                 Message.AnnounceUserGuessInput();
-                string input = Console.ReadLine();
+                string? input = Console.ReadLine();
                 // Validate the user input, format and whether it has already been targeted
                 coordinate = ValidateUserInput(input);
                 if (coordinate == null)
@@ -84,17 +81,9 @@ namespace Battleship_Group10.Controllers
             return coordinate;
         }
 
-
-
-        private void CreatePlayers()
+        private Coordinate? CheckRepeatedTarget(Coordinate coordinate)
         {
-            humanPlayer = new Player("Human", Player.PlayerType.Human);
-            computerPlayer = new Player("Computer", Player.PlayerType.Computer);
-        }
-
-        private Coordinate CheckRepeatedTarget(Coordinate coordinate)
-        {
-            if (ComputerGrid.positions[coordinate.X, coordinate.Y].status == Status.Hit || ComputerGrid.positions[coordinate.X, coordinate.Y].status == Status.Miss)
+            if (gameGrid.positions[coordinate.X, coordinate.Y].status == Status.Hit || gameGrid.positions[coordinate.X, coordinate.Y].status == Status.Miss)
             {
                 Message.AnnounceRepeatedTarget();
                 return null;
@@ -102,7 +91,7 @@ namespace Battleship_Group10.Controllers
             return coordinate;
         }
 
-        private Coordinate ValidateUserInput(string? input)
+        private Coordinate? ValidateUserInput(string? input)
         {
             // Check if input is null
             if (input == null)
@@ -119,7 +108,7 @@ namespace Battleship_Group10.Controllers
             {
                 if (x < 0 || x >= Grid.ROWS || y < 0 || y >= Grid.COLUMNS)
                 {
-                    coordinate = new Coordinate(x, y);
+                    var coordinate = new Coordinate(x, y);
                     return CheckRepeatedTarget(coordinate);
                 }
             }

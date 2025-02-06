@@ -16,7 +16,7 @@ namespace Battleship_Group10.Models
 
         public const int ROWS = 4; //MVP; 10 for Stretch
         public const int COLUMNS = 4; //MVP; 10 for Stretch
-        public Random random;
+        public Random random = new Random();
 
 
         // Constructor; height(rows) and width(cols) are set to 4 x 4 by default(MVP) or 10x10(Stretch)
@@ -47,7 +47,6 @@ namespace Battleship_Group10.Models
         // Randomly place ships on the grid, vertically
         public void randomizeShipPlacement()
         {
-            random = new Random();
             foreach (Ship ship in ships)
             {
                 // Choose a random starting position for the ship from grid positions that have Ocean status.
