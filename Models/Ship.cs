@@ -2,15 +2,16 @@
 {
     internal class Ship
     {
-        public int size { get; private set; }
-        public ShipType type { get; private set; }
-        public List<Position> positions { get; private set; }
+        public int Size { get; private set; }
+        public ShipType Type { get; private set; }
+        public List<Position> Positions { get; private set; }
 
         public Ship(ShipType shipType)
         {
-            this.type = shipType;
-            this.size = GetShipSize(shipType);
-            this.positions = new List<Position>(this.size);
+            Type = shipType;
+            Size = GetShipSize(shipType);
+            Positions = new List<Position>(Size);
+      
         }
 
         // ToDo: Included, but muted Stretch Goal Types for future implementation
@@ -25,6 +26,16 @@
                 ShipType.Destroyer => 2,
                 _ => throw new ArgumentOutOfRangeException(nameof(type), $"Unknown ship type: {type}")
             };
+        }
+
+        public bool IsSunk()
+        {  
+            return Positions.All(pos => pos.Status == Status.Hit); 
+        }
+
+        public bool IsHidden()
+        {
+            return Positions.All(pos => pos.Status != Status.Hit);
         }
 
         // ToDo: Included, but muted Stretch Goal Types for future implementation

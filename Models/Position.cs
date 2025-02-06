@@ -8,14 +8,14 @@ namespace Battleship_Group10.Models
 {
     internal class Position
     {
-        public Coordinate coordinate { get; private set; }
-        public Status status { get; set; }
+        public Coordinate Coordinate { get; private set; }
+        public Status Status { get; set; }
 
 
         public Position(Coordinate coordinate, Status status)
         {
-            this.coordinate = coordinate;
-            this.status = status;
+            Coordinate = coordinate;
+            Status = status;
         }
     }
 }
