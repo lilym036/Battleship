@@ -6,13 +6,29 @@ namespace Battleship_Group10.Controllers
 {
     internal class GameController
     {
-        public GameController()
+        private Player humanPlayer;
+        private Player computerPlayer;
+        private Grid gameGrid;
+
+        public GameController() 
+        { 
+        }
+        
+        public void Initialize()
         {
+            Message.AnnounceWelcomeMessage();
+            SetupGameGrid();
+            CreatePlayers();
         }
 
-        public Grid ComputerGrid = new Grid();
 
-        public void FireMissile()
+        private void SetupGameGrid()
+        {
+            gameGrid = new Grid();
+        }
+
+
+        private void FireMissile()
         {
             // Get the coordinate from the user
             Coordinate target = UserGuessInput();
@@ -65,9 +81,15 @@ namespace Battleship_Group10.Controllers
                     continue;
                 }
             }
-
             return coordinate;
+        }
 
+
+
+        private void CreatePlayers()
+        {
+            humanPlayer = new Player("Human", Player.PlayerType.Human);
+            computerPlayer = new Player("Computer", Player.PlayerType.Computer);
         }
 
         private Coordinate CheckRepeatedTarget(Coordinate coordinate)
@@ -95,7 +117,7 @@ namespace Battleship_Group10.Controllers
             }
             if (int.TryParse(parts[0], out int x) && int.TryParse(parts[1], out int y))
             {
-                if (x < 0 || x >= Grid.ROWS || y < 0 ||y >= Grid.COLUMNS)
+                if (x < 0 || x >= Grid.ROWS || y < 0 || y >= Grid.COLUMNS)
                 {
                     coordinate = new Coordinate(x, y);
                     return CheckRepeatedTarget(coordinate);
