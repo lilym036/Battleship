@@ -8,12 +8,12 @@ namespace Battleship_Group10.Models
 {
     internal class Coordinate
     {
-        public int X { get; }
-        public int Y { get; }
+        public int X { get; private set; }
+        public int Y { get; private set; }
 
         public Coordinate(int x, int y)
-        {  X = x; 
-           Y = y; 
+        {  this.X = x; 
+           this.Y = y; 
         }
     }
 }
