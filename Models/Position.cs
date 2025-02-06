@@ -17,13 +17,5 @@ namespace Battleship_Group10.Models
             this.coordinate = coordinate;
             this.status = status;
         }
-
-        internal enum Status
-        {
-            Water,
-            Hit,
-            Miss,
-            Ship
-        }
     }
 }
