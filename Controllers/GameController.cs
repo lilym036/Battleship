@@ -4,19 +4,33 @@ using System.Reflection;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading;
+using Battleship_Group10.Models;
 
 namespace Battleship_Group10.Controllers
 {
     public class GameController
     {
-        Player player1 = new Player("Human");
-        Player player2 = new Player("Computer");
+        private Player humanPlayer;
+        private Player computerPlayer;
+        private Grid gameGrid;
 
-        Grid grid = new Grid();
-
-        public GameController()
+        public void Initialize()
         {
+            Message.AnnounceWelcomeMessage();
+            SetupGameGrid();
+            CreatePlayers();
+        }
 
+
+        public void SetupGameGrid()
+        {
+            gameGrid = new Grid();
+        }
+
+        public void CreatePlayers()
+        {
+            humanPlayer = new Player("Human", Player.PlayerType.Human);
+            computerPlayer = new Player("Computer", Player.PlayerType.Computer);
         }
     }
 
