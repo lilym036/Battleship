@@ -13,7 +13,7 @@ namespace Battleship_Group10
             string filePath = "battleship-music.wav";
 
             // Start playing the sound asynchronously in the background
-            Task.Run(() => PlaySoundInBackground(filePath));
+            Task.Run(() => PlaySoundInBackground(filePath, 0.1f)); // Set volume to 10%
 
             // Initialize the game controller while the sound is playing
             var gc = new GameController();
@@ -25,18 +25,31 @@ namespace Battleship_Group10
         }
 
         // Method to play sound in the background
-        public static void PlaySoundInBackground(string filePath)
+        public static void PlaySoundInBackground(string filePath, float volume)
         {
             // Create a WaveOutEvent object to play the sound
             using (var audioFile = new AudioFileReader(filePath))
+            using (var volumeStream = new WaveChannel32(audioFile) { Volume = volume })
             using (var outputDevice = new WaveOutEvent())
             {
-                outputDevice.Init(audioFile);
+                outputDevice.Init(volumeStream);
                 outputDevice.Play();
 
                 // Keep the audio playing until it finishes
-                while (outputDevice.PlaybackState == PlaybackState.Playing)
+                //while (outputDevice.PlaybackState == PlaybackState.Playing)
+
+                // Loop the audio playback
+                // Loop the audio playback indefinitely without stopping and restarting
+                while (true)
                 {
+                    // If the playback is stopped, reset the position to the start and continue playing
+                    if (outputDevice.PlaybackState == PlaybackState.Stopped)
+                    {
+                        audioFile.Position = 0;  // Reset to the beginning of the audio file
+                        outputDevice.Play();     // Resume playback
+                    }
+                }
+                    {
                     // Optionally add a delay here to prevent busy-waiting
                     System.Threading.Thread.Sleep(100);
                 }

@@ -14,8 +14,8 @@ namespace Battleship_Group10.Models
         public Position[,] Positions { get; private set; }
         public List<Ship> Ships { get; private set; }
 
-        public const int ROWS = 5; //MVP; 10 for Stretch
-        public const int COLUMNS = 5; //MVP; 10 for Stretch
+        public const int ROWS = 9; //MVP; 10 for Stretch
+        public const int COLUMNS = 9; //MVP; 10 for Stretch
         public Random random = new Random();
 
 

@@ -20,7 +20,6 @@ namespace Battleship_Group10.Controllers
         {
             ConfigureConsole();
             Console.SetCursorPosition(0, 0);
-
             Message.AnnounceWelcomeMessage();
             Message.AnnounceInstructions();
             Console.WriteLine();
