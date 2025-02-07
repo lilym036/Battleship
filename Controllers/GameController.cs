@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Globalization;
 using Battleship_Group10.Helpers;
 using Battleship_Group10.Models;
+using static System.Formats.Asn1.AsnWriter;
+using System.Threading.Tasks;
+using NAudio.Wave;
 
 namespace Battleship_Group10.Controllers
 {
@@ -9,6 +13,10 @@ namespace Battleship_Group10.Controllers
         private Player humanPlayer;
         private Player computerPlayer;
         private Grid gameGrid;
+        private bool isGameOver = false;
+        public const char MIN_ROW_LETTER = 'A';
+        public const char MAX_ROW_LETTER = (char)('A' + Grid.ROWS - 1);
+
 
         public GameController() 
         {
@@ -21,7 +29,88 @@ namespace Battleship_Group10.Controllers
         
         public void Initialize()
         {
+            Console.Clear();
+            Message.AnnounceFlashyWelcome();
             Message.AnnounceWelcomeMessage();
+            Message.AnnounceInstructions();
+            //Update this. TODO
+            Message.AnnouncePressEnterOrExit();
+            checkStartOrExit();
+            Console.Clear();
+            PlayGame();
+        }
+
+        private void PlayGame()
+        {
+            // Display the game grid
+            DisplayController.DisplayGrid(gameGrid);
+
+            // Loop through the game until the game is over
+            while (!isGameOver)
+            {
+                // Fire missile
+                FireMissile();
+                // Display the game grid
+                DisplayController.DisplayGrid(gameGrid);
+            }
+            if (isGameOver)
+            {
+                Message.AnnouncePlayAgain();
+                checkRestartOrExit();
+            }
+        }
+
+        private void checkRestartOrExit()
+        {
+            bool validInput = false;
+            while (!validInput)
+            {
+                var key = Console.ReadKey(true).Key;
+                switch (key)
+                {
+                    case ConsoleKey.Enter:
+                        Message.AnnounceRestart();
+                        ResetGame();
+                        Initialize();
+                        validInput = true;
+                        break;
+                    case ConsoleKey.Escape:
+                        Message.AnnounceExit();
+                        validInput = true;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        private void checkStartOrExit()
+        {
+            bool validInput = false;
+            while (!validInput)
+            {
+                var key = Console.ReadKey(true).Key;
+                switch (key)
+                {
+                    case ConsoleKey.Enter:
+                        validInput = true;
+                        break;
+                    case ConsoleKey.Escape:
+                        Message.AnnounceExit();
+                        validInput = true;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        private void ResetGame()
+        {
+            this.gameGrid = new Grid();
+            this.humanPlayer = new Player(Player.PlayerType.Human);
+            this.computerPlayer = new Player(Player.PlayerType.Computer, gameGrid);
+            this.isGameOver = false;
         }
 
 
@@ -32,70 +121,85 @@ namespace Battleship_Group10.Controllers
 
             // Check the status of the targeted coordinate
             CheckPosition(target);
+
+            // Display the game grid
+            DisplayController.DisplayGrid(gameGrid);
         }
 
-        public bool CheckGameOver()
+        public void CheckGameOver()
         {
             //check if humanPlayer's grid is not null and all their ships are sunk
-            if (humanPlayer.grid != null && humanPlayer.grid.ships.All(ship => ship.IsSunk()))
+            if (humanPlayer.grid != null && humanPlayer.grid.Ships.All(ship => ship.IsSunk()))
             {
-                Message.AnnounceGameOver("Computer wins!");
-                return true;
+                Message.AnnounceSunkShips(computerPlayer);
+                Message.AnnounceGameOver(computerPlayer);
+                isGameOver = true;
             }
             //check if computerPlayer's grid is not null and all their ships are sunk
-            else if (computerPlayer.grid != null && computerPlayer.grid.ships.All(ship => ship.IsSunk()))
+            else if (computerPlayer.grid != null && computerPlayer.grid.Ships.All(ship => ship.IsSunk()))
             {
-                Message.AnnounceGameOver("Player wins!");
-                return true;
+                Message.AnnounceSunkShips(humanPlayer);
+                Message.AnnounceGameOver(humanPlayer);
+                isGameOver = true;
             }
-            return false;
+            else
+            {
+                isGameOver = false;
+            }
         }
 
         private void CheckPosition(Coordinate target)
         {
             // Get the position of the targeted coordinate
-            Position position = gameGrid.positions[target.X, target.Y];
+            Position position = gameGrid.Positions[target.X, target.Y];
 
             // Check the status of the position
             switch (position.Status)
             {
                 case Status.Water:
-                    Message.AnnounceMisses(target);
-                    
-                    //Updates the status of the position to Miss
-                    position.Status = Status.Miss;
 
-                    //ToDo: Update Status of the position to Miss on SHIPS, list of positions
-                    //ToDo: Ship list of positions is a reference to the position of the game grid.
-                    //So, when we update the position on the game grid, this should automatically update status of positions in list
+                    Message.AnnounceMisses(target);
+                    //DisplayMessageAndWait();
+                    position.Status = Status.Miss;
+                    // Display the game grid
+                    DisplayController.DisplayGrid(gameGrid);
                     break;
                 
                 case Status.Ship:
+                    Task.Run(() => Program.PlaySoundInBackground("HIT_SHIP.wav"));
                     Message.AnnounceHits(target);
-                    //Updates the status of the position to Hit
+                    //DisplayMessageAndWait();
                     position.Status = Status.Hit;
-                    //ToDo: Update the status of the position to Hit on SHIPS, list of positions (DONE?)
-                    //See note above re: ship list of positions
-
-                    //ToDO: Check Sunk Ship
-                    //ToDo: Check GameOver
+                    // Check if the ship is sunk and if Game is over
                     Ship? ship = GetShipAtPosition(target);
-                    if (ship != null && ship.IsSunk())
-                    {
-                        Message.AnnounceSunkShips(humanPlayer);
-                        if(CheckGameOver())
-                        {
-                            return; //Game over.
-                        }
-                    }
-                    
+                    CheckSunkShip(ship);
+                    CheckGameOver();
+                    // Display the game grid
+                    DisplayController.DisplayGrid(gameGrid);
                     break;
             }
         }
 
+        private void DisplayMessageAndWait()
+        {
+            Console.Write("Press any key to continue...");
+            Console.ReadKey(true);
+        }
+
+        private void CheckSunkShip(Ship? ship)
+        {
+            if (ship != null && ship.IsSunk())
+            {
+                // ToDo: Would need to be updated if we support dual grids to logically determine who sunk whose ship
+                Message.AnnounceSunkShip(humanPlayer, computerPlayer, ship.Type);
+                //DisplayMessageAndWait();
+            }
+
+        }
+
         private Ship? GetShipAtPosition(Coordinate target)
         {
-            foreach(var ship in humanPlayer.grid?.ships ?? computerPlayer.grid?.ships ?? new List<Ship>()) 
+            foreach(var ship in gameGrid.Ships)
             {
                 if(ship.Positions.Any(pos => pos.Coordinate.X == target.X && pos.Coordinate.Y == target.Y))
                 {
@@ -118,15 +222,22 @@ namespace Battleship_Group10.Controllers
                     Message.AnnounceInvalidCoordinate();
                     continue;
                 }
+                if (CheckRepeatedTarget(coordinate) == null)
+                {
+                    Message.AnnounceRepeatedTarget();
+                    coordinate = null;
+                }
+                // Display the game grid
+                Console.Clear();
+                DisplayController.DisplayGrid(gameGrid);
             }
             return coordinate;
         }
 
         private Coordinate? CheckRepeatedTarget(Coordinate coordinate)
         {
-            if (gameGrid.positions[coordinate.X, coordinate.Y].status == Status.Hit || gameGrid.positions[coordinate.X, coordinate.Y].status == Status.Miss)
+            if (gameGrid.Positions[coordinate.X, coordinate.Y].Status == Status.Hit || gameGrid.Positions[coordinate.X, coordinate.Y].Status == Status.Miss)
             {
-                Message.AnnounceRepeatedTarget();
                 return null;
             }
             return coordinate;
@@ -139,21 +250,26 @@ namespace Battleship_Group10.Controllers
             {
                 return null;
             }
-            // Check if input contains two numbers
-            string[] parts = input.Split(' ');
-            if (parts.Length != 2)
+            // Check if input length is 2
+
+            if (input.Length != 2)
             {
                 return null;
             }
-            if (int.TryParse(parts[0], out int x) && int.TryParse(parts[1], out int y))
+            char letter = char.ToUpper(input[0]);
+            if (!char.IsLetter(letter) || letter < MIN_ROW_LETTER || letter > MAX_ROW_LETTER)
             {
-                if (x < 0 || x >= Grid.ROWS || y < 0 || y >= Grid.COLUMNS)
-                {
-                    var coordinate = new Coordinate(x, y);
-                    return CheckRepeatedTarget(coordinate);
-                }
+                return null;
             }
-            return null;
+            if (!int.TryParse(input[1].ToString(), out int y) || y < 1 || y > Grid.COLUMNS)
+            {
+                return null;
+            }
+            int x = letter - MIN_ROW_LETTER;
+            y = y - 1;
+
+            var coordinate = new Coordinate(x, y);
+            return coordinate;
         }
     }
 }
