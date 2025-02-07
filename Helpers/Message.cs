@@ -89,6 +89,7 @@ namespace Battleship_Group10.Helpers
             // Append the boat symbol
             Console.ForegroundColor = ConsoleColor.White;
             welcomeMessage.Append(shipSymbol);
+            
 
             // Print the entire message in one line
             Console.WriteLine(welcomeMessage.ToString());
@@ -143,14 +144,12 @@ namespace Battleship_Group10.Helpers
 
         public static void AnnounceHits(Coordinate coordinate)
         {
-            Console.WriteLine($"Your missile has HIT a ship at position {(char)'A'-coordinate.X}{coordinate.Y}");
-            Thread.Sleep(1200);
+            Console.WriteLine($"Your missile has HIT a ship at position {(char)('A'+coordinate.X)}{coordinate.Y+1}");
         }
 
         public static void AnnounceMisses(Coordinate coordinate)
         {
-            Console.WriteLine($"Your missile has MISSED and landed in the ocean at position {(char)'A'-coordinate.X}{coordinate.Y}");
-            Thread.Sleep(1200);
+            Console.WriteLine($"Your missile has MISSED and landed in the ocean at position {(char)('A'+coordinate.X)}{coordinate.Y+1}");
         }
 
         public static void AnnounceInvalidCoordinate()
@@ -168,10 +167,85 @@ namespace Battleship_Group10.Helpers
             Console.WriteLine($"Please enter firing coordinate in the format \"A4\". Letters A-{GameController.MAX_ROW_LETTER} and numbers 1 - {Grid.ROWS}.");
         }
 
+        internal static void AnnounceFlashyGameOver()
+        {
+            string[] flashyGameOverMessage = new string[]
+    {
+        "                   *              )               (     ",
+        " (        (      (  `          ( /(               )\\ )  ",
+        " )\\ )     )\\     )\\))(   (     )\\()) (   (   (   (()/(  ",
+        "(()/(  ((((_)(  ((_)()\\  )\\   ((_)\\  )\\  )\\  )\\   /(_)) ",
+        " /(_))_ )\\ _ )\\ (_()((_)((_)    ((_)((_)((_)((_) (_))   ",
+        "(_)) __|(_)_\\(_)|  \\/  || __|  / _ \\\\ \\ / / | __|| _ \\  ",
+        "  | (_ | / _ \\  | |\\/| || _|  | (_) |\\ V /  | _| |   /  ",
+        "   \\___|/_/ \\_\\ |_|  |_||___|  \\___/  \\_/   |___||_|_\\  ",
+    };
+
+            foreach (string line in flashyGameOverMessage)
+            {
+                for (int i = 0; i < line.Length; i++)
+                {
+                    Console.ForegroundColor = patrioticColors[i % patrioticColors.Length];
+                    Console.Write(line[i]);
+                }
+                Console.WriteLine();
+            }
+
+            // Print the ship symbol
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine(shipSymbol);
+
+            // Print the water graphic
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine(waterGraphic);
+
+            // Reset the color to default
+            Console.ResetColor();
+        }
+
+
         public static void AnnounceGameOver(Player winner)
         {
             Console.WriteLine($"GAME OVER! {winner.name} wins!");
         }
+
+        internal static void AnnounceFlashyWin()
+        {
+            string[] flashyWinMessage = new string[]
+    {
+        "   ____ ____ ____                                                                                     ____      )                                     ____ ____ ____ ",
+        "  |   /|   /|   /    (                                    )       (           )                      |   /   ( /(             (  (                   |   /|   /|   / ",
+        "  |  / |  / |  /     )\\               (  (  (       )  ( /(   (   )\\    )  ( /( (                    |  /    )\\())       (    )\\))(   ' (            |  / |  / |  /  ",
+        "  | /  | /  | /    (((_)   (    (     )\\))( )(   ( /(  )\\()) ))\\ ((_)( /(  )\\()))\\   (    (     (    | /    ((_\\  (    ))\\  ((_)() )  )\\   (       | /  | /  | /   ",
+        "  |/   |/   |/     )\\___   )\\   )\\ ) ((_))\\(()\\  )(_))(_))/ /((_) _  )(_))(_))/((_)  )\\   )\\ )  )\\   |/    __ ((_) )\\  /((_) _(())\\_)()((_)  )\\ )    |/   |/   |/    ",
+        " (    (    (      ((/ __| ((_) _(_/(  (()(_)((_)((_)_ | |_ (_))( | |((_)_ | |_  (_) ((_) _(_/( ((_) (      \\ \\ / /((_)(_))(  \\ \\((_)/ / (_) _(_/(   (    (    (      ",
+        " )\\   )\\   )\\      | (__ / _ \\| ' \\))/ _` || '_|/ _` ||  _|| || || |/ _` ||  _| | |/ _ \\| ' \\))(_-< )\\      \\ V // _ \\| || |  \\ \\/\\/ /  | || ' \\))  )\\   )\\   )\\     ",
+        "((_) ((_) ((_)      \\___|\\___/|_||_| \\__, ||_|  \\__,_| \\__| \\_,_||_|\\__,_| \\__| |_\\___/|_||_| /__/((_)      |_| \\___/ \\_,_|   \\_/\\_/   |_||_||_|  ((_) ((_) ((_)    ",
+        "                                     |___/                                                                                                                           "
+    };
+
+            foreach (string line in flashyWinMessage)
+            {
+                for (int i = 0; i < line.Length; i++)
+                {
+                    Console.ForegroundColor = patrioticColors[i % patrioticColors.Length];
+                    Console.Write(line[i]);
+                }
+                Console.WriteLine();
+            }
+
+            // Print the ship symbol
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine(shipSymbol);
+
+            // Print the water graphic
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine(waterGraphic);
+
+            // Reset the color to default
+            Console.ResetColor();
+        }
+
 
         internal static void AnnounceInstructions()
         {

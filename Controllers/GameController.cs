@@ -31,12 +31,14 @@ namespace Battleship_Group10.Controllers
         {
             Console.Clear();
             Message.AnnounceFlashyWelcome();
+            Task.Run(() => Program.PlaySoundInBackground("WELCOME.wav", 1.0f));
             Message.AnnounceWelcomeMessage();
             Message.AnnounceInstructions();
-            //Update this. TODO
             Message.AnnouncePressEnterOrExit();
             checkStartOrExit();
+
             Console.Clear();
+            humanPlayer.AskPlayerName();
             PlayGame();
         }
 
@@ -138,8 +140,11 @@ namespace Battleship_Group10.Controllers
             //check if computerPlayer's grid is not null and all their ships are sunk
             else if (computerPlayer.grid != null && computerPlayer.grid.Ships.All(ship => ship.IsSunk()))
             {
+                Task.Run(() => Program.PlaySoundInBackground("GAME_WON.wav", 1.0f));
                 Message.AnnounceSunkShips(humanPlayer);
                 Message.AnnounceGameOver(humanPlayer);
+                Message.AnnounceFlashyGameOver();
+                Message.AnnounceFlashyWin();
                 isGameOver = true;
             }
             else
@@ -157,7 +162,8 @@ namespace Battleship_Group10.Controllers
             switch (position.Status)
             {
                 case Status.Water:
-
+                    Task.Run(() => Program.PlaySoundInBackground("WATER_SPLASH.wav", 0.5f));
+                    Task.Run(() => Program.PlaySoundInBackground("MISSED.wav", 1.0f));
                     Message.AnnounceMisses(target);
                     //DisplayMessageAndWait();
                     position.Status = Status.Miss;
@@ -166,7 +172,8 @@ namespace Battleship_Group10.Controllers
                     break;
                 
                 case Status.Ship:
-                    Task.Run(() => Program.PlaySoundInBackground("HIT_SHIP.wav"));
+                    Task.Run(() => Program.PlaySoundInBackground("EXPLOSION.wav", 0.5f));
+                    Task.Run(() => Program.PlaySoundInBackground("HIT_SHIP.wav", 1.0f));
                     Message.AnnounceHits(target);
                     //DisplayMessageAndWait();
                     position.Status = Status.Hit;
@@ -191,6 +198,7 @@ namespace Battleship_Group10.Controllers
             if (ship != null && ship.IsSunk())
             {
                 // ToDo: Would need to be updated if we support dual grids to logically determine who sunk whose ship
+                //Task.Run(() => Program.PlaySoundInBackground("SHIP_SUNK.wav", 1.0f));
                 Message.AnnounceSunkShip(humanPlayer, computerPlayer, ship.Type);
                 //DisplayMessageAndWait();
             }

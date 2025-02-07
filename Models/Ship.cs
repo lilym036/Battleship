@@ -19,9 +19,9 @@
         {
             return type switch
             {
-                //ShipType.Carrier => 5,
-                //ShipType.Battleship => 4,
-                //ShipType.Cruiser => 3,
+                ShipType.Carrier => 5,
+                ShipType.Battleship => 4,
+                ShipType.Cruiser => 3,
                 ShipType.Submarine => 3,
                 ShipType.Destroyer => 2,
                 _ => throw new ArgumentOutOfRangeException(nameof(type), $"Unknown ship type: {type}")
@@ -41,9 +41,9 @@
         // ToDo: Included, but muted Stretch Goal Types for future implementation
         internal enum ShipType
         {
-            //Carrier,
-            //Battleship,
-            //Cruiser,
+            Carrier,
+            Battleship,
+            Cruiser,
             Submarine,
             Destroyer
         }

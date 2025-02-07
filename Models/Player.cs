@@ -14,17 +14,42 @@ namespace Battleship_Group10.Models
         public Grid? grid { get; private set; }
         public PlayerType type { get; private set; }
 
-        public Player(PlayerType playerType, Grid? grid = null, string name = "Player 1" )
+        public Player(PlayerType playerType, Grid? grid = null, string name = "Player 1")
         {
             this.type = playerType;
             this.grid = grid;
             this.name = playerType == PlayerType.Human ? name : PlayerType.Computer.ToString();
         }
 
-        internal enum  PlayerType
+        internal enum PlayerType
         {
             Human,
             Computer
         }
+
+        public void AskPlayerName()
+        {
+            Console.WriteLine("Enter the player's name: ");
+            string playerName= Console.ReadLine();
+            this.SetName(playerName);
+        }
+
+        //Method to set the player's name
+        public void SetName(string playerName)
+        {
+            if (this.type == PlayerType.Human)
+            {
+                this.name = playerName;
+            }
+        }
+
+        //Method to display player's name
+        public string DisplayName()
+        {
+            return $"Player Name: {this.name}";
+        }
+
+
+
     }
 }
