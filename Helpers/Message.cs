@@ -1,19 +1,40 @@
 ﻿using System;
+using System.Text;
 using Battleship_Group10.Models;
 
 
 namespace Battleship_Group10.Helpers
 {
 
-    internal class Message
+    internal static class Message
     {
-        public Message()
+        static Message()
         {
+            Console.OutputEncoding = Encoding.UTF8;
         }
 
         public static void AnnounceWelcomeMessage()
         {
-            Console.WriteLine("Welcome to Battleship!");
+            Console.WriteLine("WELCOME TO ");
+
+            string word = "BATTLESHIP!";
+            string shipSymbol = "🚢";
+            ConsoleColor[] colors = { ConsoleColor.Red, ConsoleColor.Green, ConsoleColor.Blue, ConsoleColor.Yellow, ConsoleColor.Cyan, ConsoleColor.Magenta, ConsoleColor.White, ConsoleColor.Gray };
+
+            // Print the word "Battleship" in different colors
+            for (int i = 0; i < word.Length; i++)
+            {
+                Console.ForegroundColor = colors[i % colors.Length];
+                Console.Write(word[i]);
+            }
+
+            // Print the boat symbol
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write(shipSymbol);
+
+            // Reset the color to default
+            Console.ResetColor();
+            Console.WriteLine();
         }
 
         public static void AnnounceHits(Coordinate coordinate)
