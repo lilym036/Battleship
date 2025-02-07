@@ -1,6 +1,7 @@
 ﻿using System;
 using Battleship_Group10.Helpers;
 using Battleship_Group10.Models;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace Battleship_Group10.Controllers
 {
@@ -25,8 +26,14 @@ namespace Battleship_Group10.Controllers
         
         public void Initialize()
         {
+            Console.Clear();
+            Message.AnnounceFlashyWelcome();
             Message.AnnounceWelcomeMessage();
             Message.AnnounceInstructions();
+            //Update this. TODO
+            Message.AnnouncePressEnterOrExit();
+            checkStartOrExit();
+            Console.Clear();
             PlayGame();
         }
 
@@ -43,6 +50,65 @@ namespace Battleship_Group10.Controllers
                 // Display the game grid
                 DisplayController.DisplayGrid(gameGrid);
             }
+            if (isGameOver)
+            {
+                Message.AnnouncePlayAgain();
+                checkRestartOrExit();
+                DisplayController.ConfigureConsole();
+            }
+        }
+
+        private void checkRestartOrExit()
+        {
+            bool validInput = false;
+            while (!validInput)
+            {
+                var key = Console.ReadKey(true).Key;
+                switch (key)
+                {
+                    case ConsoleKey.Enter:
+                        Message.AnnounceRestart();
+                        ResetGame();
+                        Initialize();
+                        validInput = true;
+                        break;
+                    case ConsoleKey.Escape:
+                        Message.AnnounceExit();
+                        validInput = true;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        private void checkStartOrExit()
+        {
+            bool validInput = false;
+            while (!validInput)
+            {
+                var key = Console.ReadKey(true).Key;
+                switch (key)
+                {
+                    case ConsoleKey.Enter:
+                        validInput = true;
+                        break;
+                    case ConsoleKey.Escape:
+                        Message.AnnounceExit();
+                        validInput = true;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        private void ResetGame()
+        {
+            this.gameGrid = new Grid();
+            this.humanPlayer = new Player(Player.PlayerType.Human);
+            this.computerPlayer = new Player(Player.PlayerType.Computer, gameGrid);
+            this.isGameOver = false;
         }
 
 
@@ -53,6 +119,10 @@ namespace Battleship_Group10.Controllers
 
             // Check the status of the targeted coordinate
             CheckPosition(target);
+
+            // Clear the console and display the game grid
+            Console.Clear();
+            DisplayController.DisplayGrid(gameGrid);
         }
 
         public void CheckGameOver()
@@ -88,6 +158,9 @@ namespace Battleship_Group10.Controllers
                 case Status.Water:
                     Message.AnnounceMisses(target);
                     position.Status = Status.Miss;
+                    // Clear the console and display the game grid
+                    Console.Clear();
+                    DisplayController.DisplayGrid(gameGrid);
                     break;
                 
                 case Status.Ship:
@@ -97,7 +170,8 @@ namespace Battleship_Group10.Controllers
                     Ship? ship = GetShipAtPosition(target);
                     CheckSunkShip(ship);
                     CheckGameOver();
-                    CheckGameOver();
+                    // Display the game grid
+                    DisplayController.DisplayGrid(gameGrid);
                     break;
             }
         }
@@ -137,6 +211,9 @@ namespace Battleship_Group10.Controllers
                     Message.AnnounceInvalidCoordinate();
                     continue;
                 }
+                // Clear the console and display the game grid
+                Console.Clear();
+                DisplayController.DisplayGrid(gameGrid);
             }
             return coordinate;
         }
