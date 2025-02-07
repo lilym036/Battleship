@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace Battleship_Group10
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             // Path to the wav file (ensure the path is correct)
             string filePath = "battleship-music.wav";
@@ -25,7 +25,7 @@ namespace Battleship_Group10
         }
 
         // Method to play sound in the background
-        static void PlaySoundInBackground(string filePath)
+        public static void PlaySoundInBackground(string filePath)
         {
             // Create a WaveOutEvent object to play the sound
             using (var audioFile = new AudioFileReader(filePath))

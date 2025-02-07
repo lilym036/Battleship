@@ -3,6 +3,8 @@ using System.Globalization;
 using Battleship_Group10.Helpers;
 using Battleship_Group10.Models;
 using static System.Formats.Asn1.AsnWriter;
+using System.Threading.Tasks;
+using NAudio.Wave;
 
 namespace Battleship_Group10.Controllers
 {
@@ -164,6 +166,7 @@ namespace Battleship_Group10.Controllers
                     break;
                 
                 case Status.Ship:
+                    Task.Run(() => Program.PlaySoundInBackground("HIT_SHIP.wav"));
                     Message.AnnounceHits(target);
                     //DisplayMessageAndWait();
                     position.Status = Status.Hit;
