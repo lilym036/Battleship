@@ -34,35 +34,76 @@ namespace Battleship_Group10.Controllers
             CheckPosition(target);
         }
 
+        public bool CheckGameOver()
+        {
+            //check if humanPlayer's grid is not null and all their ships are sunk
+            if (humanPlayer.grid != null && humanPlayer.grid.ships.All(ship => ship.IsSunk()))
+            {
+                Message.AnnounceGameOver("Computer wins!");
+                return true;
+            }
+            //check if computerPlayer's grid is not null and all their ships are sunk
+            else if (computerPlayer.grid != null && computerPlayer.grid.ships.All(ship => ship.IsSunk()))
+            {
+                Message.AnnounceGameOver("Player wins!");
+                return true;
+            }
+            return false;
+        }
+
         private void CheckPosition(Coordinate target)
         {
             // Get the position of the targeted coordinate
             Position position = gameGrid.positions[target.X, target.Y];
 
             // Check the status of the position
-            switch (position.status)
+            switch (position.Status)
             {
                 case Status.Water:
                     Message.AnnounceMisses(target);
+                    
                     //Updates the status of the position to Miss
-                    position.status = Status.Miss;
+                    position.Status = Status.Miss;
+
                     //ToDo: Update Status of the position to Miss on SHIPS, list of positions
                     //ToDo: Ship list of positions is a reference to the position of the game grid.
                     //So, when we update the position on the game grid, this should automatically update status of positions in list
                     break;
+                
                 case Status.Ship:
                     Message.AnnounceHits(target);
                     //Updates the status of the position to Hit
-                    position.status = Status.Hit;
+                    position.Status = Status.Hit;
                     //ToDo: Update the status of the position to Hit on SHIPS, list of positions (DONE?)
                     //See note above re: ship list of positions
 
                     //ToDO: Check Sunk Ship
                     //ToDo: Check GameOver
+                    Ship? ship = GetShipAtPosition(target);
+                    if (ship != null && ship.IsSunk())
+                    {
+                        Message.AnnounceSunkShips(humanPlayer);
+                        if(CheckGameOver())
+                        {
+                            return; //Game over.
+                        }
+                    }
+                    
                     break;
             }
         }
 
+        private Ship? GetShipAtPosition(Coordinate target)
+        {
+            foreach(var ship in humanPlayer.grid?.ships ?? computerPlayer.grid?.ships ?? new List<Ship>()) 
+            {
+                if(ship.Positions.Any(pos => pos.Coordinate.X == target.X && pos.Coordinate.Y == target.Y))
+                {
+                    return ship;
+                }
+            }
+            return null;
+        }
         private Coordinate UserGuessInput()
         {
             Coordinate? coordinate = null;
