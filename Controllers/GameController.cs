@@ -54,7 +54,6 @@ namespace Battleship_Group10.Controllers
             {
                 Message.AnnouncePlayAgain();
                 checkRestartOrExit();
-                DisplayController.ConfigureConsole();
             }
         }
 
@@ -120,8 +119,7 @@ namespace Battleship_Group10.Controllers
             // Check the status of the targeted coordinate
             CheckPosition(target);
 
-            // Clear the console and display the game grid
-            Console.Clear();
+            // Display the game grid
             DisplayController.DisplayGrid(gameGrid);
         }
 
@@ -158,8 +156,7 @@ namespace Battleship_Group10.Controllers
                 case Status.Water:
                     Message.AnnounceMisses(target);
                     position.Status = Status.Miss;
-                    // Clear the console and display the game grid
-                    Console.Clear();
+                    // Display the game grid
                     DisplayController.DisplayGrid(gameGrid);
                     break;
                 
@@ -211,7 +208,11 @@ namespace Battleship_Group10.Controllers
                     Message.AnnounceInvalidCoordinate();
                     continue;
                 }
-                // Clear the console and display the game grid
+                if (CheckRepeatedTarget(coordinate) == null)
+                {
+                    coordinate = null;
+                }
+                // Display the game grid
                 Console.Clear();
                 DisplayController.DisplayGrid(gameGrid);
             }
@@ -254,7 +255,7 @@ namespace Battleship_Group10.Controllers
             y = y - 1;
 
             var coordinate = new Coordinate(x, y);
-            return CheckRepeatedTarget(coordinate);
+            return coordinate;
         }
     }
 }
