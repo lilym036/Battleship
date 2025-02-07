@@ -155,6 +155,7 @@ namespace Battleship_Group10.Controllers
             switch (position.Status)
             {
                 case Status.Water:
+
                     Message.AnnounceMisses(target);
                     //DisplayMessageAndWait();
                     position.Status = Status.Miss;
