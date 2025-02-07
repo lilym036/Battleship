@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using Battleship_Group10.Helpers;
 using Battleship_Group10.Models;
 using static System.Formats.Asn1.AsnWriter;
@@ -155,6 +156,7 @@ namespace Battleship_Group10.Controllers
             {
                 case Status.Water:
                     Message.AnnounceMisses(target);
+                    //DisplayMessageAndWait();
                     position.Status = Status.Miss;
                     // Display the game grid
                     DisplayController.DisplayGrid(gameGrid);
@@ -162,6 +164,7 @@ namespace Battleship_Group10.Controllers
                 
                 case Status.Ship:
                     Message.AnnounceHits(target);
+                    //DisplayMessageAndWait();
                     position.Status = Status.Hit;
                     // Check if the ship is sunk and if Game is over
                     Ship? ship = GetShipAtPosition(target);
@@ -173,12 +176,19 @@ namespace Battleship_Group10.Controllers
             }
         }
 
+        private void DisplayMessageAndWait()
+        {
+            Console.Write("Press any key to continue...");
+            Console.ReadKey(true);
+        }
+
         private void CheckSunkShip(Ship? ship)
         {
             if (ship != null && ship.IsSunk())
             {
                 // ToDo: Would need to be updated if we support dual grids to logically determine who sunk whose ship
                 Message.AnnounceSunkShip(humanPlayer, computerPlayer, ship.Type);
+                //DisplayMessageAndWait();
             }
 
         }
@@ -210,6 +220,7 @@ namespace Battleship_Group10.Controllers
                 }
                 if (CheckRepeatedTarget(coordinate) == null)
                 {
+                    Message.AnnounceRepeatedTarget();
                     coordinate = null;
                 }
                 // Display the game grid
@@ -223,7 +234,6 @@ namespace Battleship_Group10.Controllers
         {
             if (gameGrid.Positions[coordinate.X, coordinate.Y].Status == Status.Hit || gameGrid.Positions[coordinate.X, coordinate.Y].Status == Status.Miss)
             {
-                Message.AnnounceRepeatedTarget();
                 return null;
             }
             return coordinate;

@@ -31,8 +31,11 @@ namespace Battleship_Group10.Controllers
             Console.Write(" ");
             for (int col = 1; col <= gameGrid.Width; col++)
             {
+                Console.ForegroundColor = Message.patrioticColors[(col - 1) % Message.patrioticColors.Length];
+
                 Console.Write($" {col} ");
             }
+            Console.ResetColor();
 
             // Print the game grid
             for (int row = 0; row < gameGrid.Height * 2 + 1; row++)
@@ -40,12 +43,14 @@ namespace Battleship_Group10.Controllers
                 // Print the row header
                 if (row != 0 && row % 2 == 0)
                 {
+                    Console.ForegroundColor = Message.patrioticColors[(row / 2 - 1) % Message.patrioticColors.Length];
                     Console.Write($"{(char)('A' + (row - 1) / 2)} ");
                 }
                 else
                 {
                     Console.Write("  ");
                 }
+                Console.ResetColor();
 
                 int gridRow = (row - 1) / 2;
                 Console.WriteLine();
@@ -72,9 +77,9 @@ namespace Battleship_Group10.Controllers
 
         static private string DisplayGridCell(int row, int col, Grid grid)
         {
-            string hit = "##";
-            string miss = "XX";
-            string ocean = "  ";
+            string hit = "\u001b[32m##\u001b[0m"; // Green ##
+            string miss = "\u001b[31mXX\u001b[0m"; // Red XX
+            string ocean = "\u001b[34m~~\u001b[0m"; // Blue water symbol
             const int w = Grid.COLUMNS * 2;
             const int h = Grid.ROWS * 2;
 

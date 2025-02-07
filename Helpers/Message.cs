@@ -16,8 +16,8 @@ namespace Battleship_Group10.Helpers
 
         const string word = "BATTLESHIP!";
         const string shipSymbol = "🚢";
-        static ConsoleColor[] colors = { ConsoleColor.Red, ConsoleColor.Green, ConsoleColor.Blue, ConsoleColor.Yellow, ConsoleColor.Cyan, ConsoleColor.Magenta, ConsoleColor.White, ConsoleColor.Gray };
-        static ConsoleColor[] patrioticColors = { ConsoleColor.White, ConsoleColor.DarkRed, ConsoleColor.Red, ConsoleColor.DarkBlue, ConsoleColor.Blue, ConsoleColor.Cyan};
+        public static ConsoleColor[] colors = { ConsoleColor.Red, ConsoleColor.Green, ConsoleColor.Blue, ConsoleColor.Yellow, ConsoleColor.Cyan, ConsoleColor.Magenta, ConsoleColor.White, ConsoleColor.Gray };
+        public static ConsoleColor[] patrioticColors = { ConsoleColor.White, ConsoleColor.DarkRed, ConsoleColor.Red, ConsoleColor.DarkBlue, ConsoleColor.Blue, ConsoleColor.Cyan};
 
         static string[] flashyWelcomeMessage = new string[]
     {
@@ -143,14 +143,14 @@ namespace Battleship_Group10.Helpers
 
         public static void AnnounceHits(Coordinate coordinate)
         {
-            Console.WriteLine($"Your missile has HIT a ship at row {coordinate.X}, column {coordinate.Y}");
-            Thread.Sleep(1000);
+            Console.WriteLine($"Your missile has HIT a ship at position {(char)'A'-coordinate.X}{coordinate.Y}");
+            Thread.Sleep(1200);
         }
 
         public static void AnnounceMisses(Coordinate coordinate)
         {
-            Console.WriteLine($"Your missile has MISSED and landed in the ocean at row {coordinate.X}, column {coordinate.Y}");
-            Thread.Sleep(1000);
+            Console.WriteLine($"Your missile has MISSED and landed in the ocean at position {(char)'A'-coordinate.X}{coordinate.Y}");
+            Thread.Sleep(1200);
         }
 
         public static void AnnounceInvalidCoordinate()
@@ -193,12 +193,12 @@ namespace Battleship_Group10.Helpers
         public static void AnnounceSunkShip(Player winning, Player losing, Ship.ShipType shipType)
         {
             Console.WriteLine($"{winning.name} has sunk {losing.name}'s {shipType}!");
-            Thread.Sleep(1000);
+            Thread.Sleep(1200);
         }
 
         internal static void AnnouncePlayAgain()
         {
-            Console.WriteLine("  Play again press [Enter] |or| quit press [Escape]?");
+            Console.WriteLine("  Play again press [Enter] or quit press [Escape]?");
         }
 
         internal static void AnnounceRestart()
