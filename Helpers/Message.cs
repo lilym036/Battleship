@@ -61,7 +61,16 @@ namespace Battleship_Group10.Helpers
         {
             Console.WriteLine($"Please enter two numbers 1 - {Grid.ROWS} in the format \"x y\".");
         }
-    }
 
+        public static void AnnounceGameOver(string winner)
+        {
+            Console.WriteLine($"GAME OVER! {winner}");
+        }
+
+        public static void AnnounceSunkShips(Player player)
+        {
+            Console.WriteLine($"{player.name} has sunk all the opponents's ships!");
+        }
+    }
 }
 
