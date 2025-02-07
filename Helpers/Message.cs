@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using Battleship_Group10.Models;
+using Battleship_Group10.Controllers;
 
 
 namespace Battleship_Group10.Helpers
@@ -49,27 +50,49 @@ namespace Battleship_Group10.Helpers
 
         public static void AnnounceInvalidCoordinate()
         {
-            Console.WriteLine($"Invalid coordinate. Please enter two numbers 1 - {Grid.ROWS} in the format \"x y\".");
+            Console.WriteLine($"Invalid coordinate.");
+            AnnounceUserGuessInput();
         }
 
         public static void AnnounceRepeatedTarget()
         {
-            Console.WriteLine($"Coordinate has already been targeted. Please enter a new coordinate. Two numbers 1 - {Grid.ROWS} in the format \"x y\".");
+            Console.WriteLine($"Coordinate has already been targeted.");
+            AnnounceUserGuessInput();
         }
 
         public static void AnnounceUserGuessInput()
         {
-            Console.WriteLine($"Please enter two numbers 1 - {Grid.ROWS} in the format \"x y\".");
+            Console.WriteLine($"Please enter firing coordinate in the format \"A4\". Letters A-{GameController.MAX_ROW_LETTER} and numbers 1 - {Grid.ROWS}.");
         }
 
-        public static void AnnounceGameOver(string winner)
+        public static void AnnounceGameOver(Player winner)
         {
-            Console.WriteLine($"GAME OVER! {winner}");
+            Console.WriteLine($"GAME OVER! {winner.name} wins!");
         }
+
+        internal static void AnnounceInstructions()
+        {
+            Console.WriteLine();
+            Console.WriteLine("  This game is all about strategic guesses. Battleships will be");
+            Console.WriteLine("  placed on a grid and Players will fire missiles at the enemy grid,");
+            Console.WriteLine("  aiming to find and sink ALL enemy ships. Player wins when all enemy");
+            Console.WriteLine("  ships have been sunk. Do you have what it takes to DESTROY. THEM. ALL?!?");
+            Console.WriteLine();
+            Console.WriteLine("  Press [escape] at any time to close the game.");
+            Console.WriteLine();
+            Console.WriteLine("  Press [enter] to begin...");
+        }
+
 
         public static void AnnounceSunkShips(Player player)
         {
-            Console.WriteLine($"{player.name} has sunk all the opponents's ships!");
+            Console.WriteLine($"{player.name} has sunk all the opponent's ships!");
+        }
+
+        // Announces when a single ship has been sunk with ship type
+        public static void AnnounceSunkShip(Player winning, Player losing, Ship.ShipType shipType)
+        {
+            Console.WriteLine($"{winning.name} has sunk {losing.name}'s {shipType}!");
         }
     }
 }
